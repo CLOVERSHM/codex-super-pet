@@ -1,0 +1,43 @@
+const {chromium}=require("playwright"),{spawn}=require("child_process");
+const fs=require("fs"),os=require("os"),path=require("path"),assert=require("assert");
+const root=path.resolve(__dirname,".."),data=fs.mkdtempSync(path.join(os.tmpdir(),"desktop-projects-"));
+const statePath=path.join(data,".codex-global-state.json");
+const state={"local-projects":{p1:{id:"p1",name:"Codex 合成项目",rootPaths:["/synthetic/project"]}},"project-order":["p1"]};
+fs.writeFileSync(statePath,JSON.stringify(state));
+const server=spawn("python3",[path.join(root,"console.py"),"--port","8895","--data",path.join(data,"ledger"),"--source",path.join(data,"source")],{env:{...process.env,CODEX_HOME:data}});
+let browser;
+(async()=>{
+  let runtime;
+  for(let i=0;i<100;i++){if(fs.existsSync(path.join(data,"ledger/runtime.json"))){runtime=JSON.parse(fs.readFileSync(path.join(data,"ledger/runtime.json")));break;}await new Promise(r=>setTimeout(r,100));}
+  assert(runtime);
+  browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH||chromium.executablePath()});
+  const page=await browser.newPage({viewport:{width:1440,height:960}});
+  await page.goto(runtime.url+"/legacy");await page.locator("[data-project-id=p1]").waitFor();
+  assert.equal(await page.locator("[data-new-catalog=project]").count(),0);
+  assert.equal(await page.locator("[data-drag]").count(),1);
+  await page.getByRole("button",{name:"新建需求",exact:true}).click();
+  assert.equal(await page.locator("#create-form [name=project_id] option").count(),1);
+  await page.locator("#create-form [name=title]").fill("合成需求");
+  await page.locator("#create-form .primary").click();
+  await page.locator(".detail-title").waitFor();
+  state["local-projects"].p1.name="Codex 改名";
+  state["local-projects"].p2={id:"p2",name:"新增项目",rootPaths:[]};
+  state["project-order"]=["p2","p1"];
+  fs.writeFileSync(statePath,JSON.stringify(state));
+  await page.reload();await page.locator("[data-project-id=p2]").waitFor();
+  assert.deepEqual(await page.locator("[data-project-name]").evaluateAll(ns=>ns.map(n=>n.dataset.projectId)),["p2","p1"]);
+  assert((await page.locator(".detail-id").innerText()).includes("Codex 改名"));
+  delete state["local-projects"].p1;state["project-order"]=["p2"];
+  fs.writeFileSync(statePath,JSON.stringify(state));
+  await page.reload();await page.locator("[data-project-id=p2]").waitFor();
+  assert.equal(await page.locator("[data-drag]").count(),1);
+  assert.equal(await page.locator(".tree-item").count(),1);
+  assert((await page.locator(".detail-id").innerText()).includes("未关联 Codex 项目"));
+  fs.writeFileSync(statePath,"{");
+  await page.reload();await page.locator("#toast").filter({hasText:"无法读取 Codex"}).waitFor();
+  console.log("6 desktop project mirror browser checks: PASS");
+})().catch(e=>{console.error(e);process.exitCode=1;}).finally(async()=>{
+  if(browser)await browser.close();server.kill("SIGTERM");
+  if(server.exitCode===null)await new Promise(r=>server.once("exit",r));
+  fs.rmSync(data,{recursive:true,force:true});
+});
