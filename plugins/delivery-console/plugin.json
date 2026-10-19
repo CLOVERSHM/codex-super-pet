@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "delivery-console",
+  "version": "0.1.0",
+  "description": "本机需求进度、测试证据和人工决策管理，不执行生产变更。",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "需求交付控制台",
+        "shortDescription": "记录需求进度与版本绑定证据",
+        "category": "Productivity",
+        "capabilities": ["Read", "Write"],
+        "defaultPrompt": ["查看当前需求进度和需要我决策的事项"],
+        "brandColor": "#176D50",
+        "composerIcon": "./assets/icon.png",
+        "logo": "./assets/icon.png"
+      }
+    }
+  }
+}
