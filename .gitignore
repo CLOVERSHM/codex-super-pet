@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.sqlite3-*
+runtime.json
+artifacts/
+.DS_Store
+.venv/
+node_modules/
+server.log
+private/
+*.zip
+*.zip.sha256
