@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>会话工作台 · 交付控制台</title><link rel="icon" href="/icon.png">
+<link rel="stylesheet" href="/sessions.css"><script defer src="/lucide.js"></script><script defer src="/sessions.js"></script>
+</head>
+<body>
+<aside class="rail">
+  <div class="brand"><img src="/icon.png" alt=""><strong>交付控制台</strong></div>
+  <div class="rail-title">项目与会话 <span id="project-count"></span></div>
+  <nav id="projects" aria-label="项目树"></nav>
+  <div class="rail-bottom"><button type="button" data-workspace="sessions" class="active"><i data-lucide="messages-square"></i>会话工作台</button><button type="button" data-workspace="management"><i data-lucide="settings-2"></i>管理面板</button><button type="button" data-workspace="ledger"><i data-lucide="list-checks"></i>需求账本</button></div>
+</aside>
+<main>
+  <section id="session-workspace">
+    <header><div><div class="eyebrow">项目 / 会话</div><h1>会话工作台</h1></div><div class="toolbar"><button id="show-guide" title="使用引导" aria-label="使用引导"><i data-lucide="circle-help"></i></button><button id="reconcile" title="立即对账" aria-label="立即对账"><i data-lucide="refresh-cw"></i></button></div></header>
+    <div class="health" id="health" role="status"></div>
+    <nav class="status-tabs" id="status-tabs" aria-label="按状态筛选会话"></nav>
+    <div class="controls"><label class="search"><i data-lucide="search"></i><input id="search" type="search" placeholder="搜索会话、阶段或摘要" aria-label="搜索会话"></label><label class="filter-label">项目<select id="project-filter" aria-label="筛选项目"><option value="">全部项目</option></select></label><span class="result-count" id="session-count"></span></div>
+    <div class="table-scroll"><table class="session-table"><thead><tr><th><button data-sort="title">会话名称 <i data-lucide="arrow-down-up"></i></button></th><th><button data-sort="state">状态 <i data-lucide="arrow-down-up"></i></button></th><th><button data-sort="project">项目 <i data-lucide="arrow-down-up"></i></button></th><th>当前阶段 / 最近进展</th><th><button data-sort="updated">最近活动 <i data-lucide="arrow-down-up"></i></button></th><th>操作</th></tr></thead><tbody id="sessions"></tbody></table></div>
+    <div class="drawer-backdrop" id="drawer-backdrop" hidden></div><aside class="detail-pane" id="detail" role="dialog" aria-modal="true" aria-label="会话详情" hidden></aside>
+  </section>
+  <iframe class="workspace-frame" id="management-frame" title="管理面板" hidden></iframe>
+  <iframe class="workspace-frame" id="ledger-frame" title="需求账本" hidden></iframe>
+</main>
+<dialog id="welcome-dialog" aria-labelledby="welcome-title">
+  <div class="welcome-head"><span id="welcome-step"></span><button id="welcome-close" type="button" title="关闭引导" aria-label="关闭引导"><i data-lucide="x"></i></button></div>
+  <h2 id="welcome-title"></h2><p id="welcome-description"></p>
+  <form id="welcome-form" hidden>
+    <div class="welcome-dates"><label>开始日期<input id="welcome-start" type="date" required></label><label>结束日期<input id="welcome-end" type="date" required></label></div>
+    <fieldset><legend>采集项目</legend><div id="welcome-projects"></div></fieldset>
+    <p class="welcome-note">仅从本机 Codex 索引读取所选时段的用户输入，规则初筛后保存候选；不会自动判断任务完成或录入需求。已加白项目不会采集。</p>
+    <p id="welcome-error" role="alert" hidden></p>
+  </form>
+  <div class="welcome-actions"><button id="welcome-back" type="button">上一步</button><button id="welcome-skip" type="button">稍后再说</button><button id="welcome-next" type="button" class="primary">下一步</button></div>
+</dialog>
+<div id="toast" role="alert" hidden></div>
+</body></html>

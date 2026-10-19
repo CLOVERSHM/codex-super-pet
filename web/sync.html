@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>同步联通验收</title><link rel="stylesheet" href="/sync.css"><link rel="icon" href="/icon.png"><script defer src="/lucide.js"></script><script defer src="/sync.js"></script></head>
+<body>
+<header><img src="/icon.png" alt=""><h1>同步联通验收</h1><span class="badge">合成宿主</span><span id="connection">连接中</span></header>
+<div class="status">真实 Codex 桌面：未连接</div>
+<main>
+<section class="host">
+<h2>合成 Codex 会话</h2>
+<form id="create"><label>会话名称<input name="title" required maxlength="160"></label><button title="新建合成会话"><i data-lucide="plus"></i>新建会话</button></form>
+<label>当前会话<select id="sessions"><option value="">暂无会话</option></select></label>
+<form id="input"><label>新输入<textarea name="value" required maxlength="4000" rows="3"></textarea></label><button title="提交合成输入"><i data-lucide="send"></i>提交输入</button></form>
+<form id="goal"><label>目标<textarea name="value" maxlength="4000" rows="3"></textarea></label><button title="修改合成目标"><i data-lucide="target"></i>修改目标</button></form>
+<h3>宿主接收回执</h3><div id="receipts" class="history"></div>
+</section>
+<section class="web">
+<h2>Web 任务投影</h2><div id="projection"></div>
+<form id="approval"><h3>人工审批</h3><label>执行范围<textarea name="step" required maxlength="2000" rows="3"></textarea></label><label>审批类型<select name="scope"><option value="preflight">只读预检</option><option value="develop">本地开发与隔离测试</option></select></label><label>审批意见<input name="note" required maxlength="2000"></label><button title="批准当前任务版本"><i data-lucide="check"></i>批准当前版本</button></form>
+<div id="commands"></div>
+</section>
+</main><p id="error" role="alert"></p>
+</body></html>
