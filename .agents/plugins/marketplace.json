@@ -1,0 +1,10 @@
+{
+  "name": "local-delivery",
+  "interface": {"displayName": "本机交付工具"},
+  "plugins": [{
+    "name": "delivery-console",
+    "source": {"source": "local", "path": "./plugins/delivery-console"},
+    "policy": {"installation": "AVAILABLE", "authentication": "ON_INSTALL"},
+    "category": "Productivity"
+  }]
+}
